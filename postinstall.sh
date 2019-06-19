@@ -49,7 +49,7 @@ function install_docker_compose {
         curl -sL https://bootstrap.pypa.io/get-pip.py | sudo python
     fi
     if ! command -v docker-compose; then
-        sudo -E pip install docker-compose
+        sudo -E pip install docker-compose==1.24.0
     fi
 }
 
