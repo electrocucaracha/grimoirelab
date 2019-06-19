@@ -10,7 +10,7 @@ networks:
 
 services:
   arthurd:
-    image: electrocucaracha/grimoirelab-kingarthur
+    image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
       context: ./kingarthur
     links:
@@ -24,7 +24,7 @@ services:
       api:
         ipv4_address: 10.5.1.4
   arthurw:
-    image: electrocucaracha/grimoirelab-kingarthur
+    image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
       context: ./kingarthur
     links:
