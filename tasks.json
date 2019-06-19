@@ -1,0 +1,34 @@
+{
+    "tasks": [
+        {
+            "task_id": "arthur.git",
+            "backend": "git",
+            "backend_args": {
+                "gitpath": "/tmp/git/arthur.git/",
+                "uri": "https://github.com/chaoss/grimoirelab-kingarthur.git",
+                "from_date": "2015-03-01"
+            },
+            "category": "commit",
+            "scheduler": {
+                "delay": 10
+            }
+        },
+        {
+            "task_id": "bugzilla_mozilla",
+            "backend": "bugzillarest",
+            "backend_args": {
+                "url": "https://bugzilla.mozilla.org/",
+                "from_date": "2016-09-19"
+            },
+            "category": "bug",
+            "archive": {
+                "fetch_from_archive": true,
+                "archived_after": "2018-02-26 09:00"
+            },
+            "scheduler": {
+                "delay": 60,
+                "max_retries": 5
+            }
+        }
+    ]
+}

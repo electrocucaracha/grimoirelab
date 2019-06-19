@@ -1,0 +1,46 @@
+version: '3.3'
+
+networks:
+  api:
+    ipam:
+     driver: default
+     config:
+       - subnet: 10.5.1.0/24
+  worker:
+
+services:
+  arthurd:
+    image: electrocucaracha/grimoirelab-kingarthur
+    build:
+      context: ./kingarthur
+    links:
+      - redis
+      - elasticsearch
+    command:
+      arthurd --no-daemon --debug --database redis://redis/8 --es-index http://elasticsearch:9200 --no-archive --log-path /var/log/ --host 0.0.0.0 --port 8080
+    ports:
+      - "8080:8080"
+    networks:
+      api:
+        ipv4_address: 10.5.1.4
+  arthurw:
+    image: electrocucaracha/grimoirelab-kingarthur
+    build:
+      context: ./kingarthur
+    links:
+      - redis
+    command:
+      arthurw --debug --database redis://redis/8
+    networks:
+      - worker
+  redis:
+    image: redis:5.0.5
+    networks:
+      - worker
+      - api
+  elasticsearch:
+    image: elasticsearch:7.1.1
+    environment:
+      - discovery.type=single-node
+    networks:
+      - api
