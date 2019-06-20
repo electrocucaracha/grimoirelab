@@ -10,6 +10,7 @@ if ENV['no_proxy'] != nil or ENV['NO_PROXY']
   end
   $no_proxy += ",10.0.2.15"
 end
+socks_proxy = ENV['socks_proxy'] || ENV['SOCKS_PROXY'] || ""
 
 Vagrant.configure("2") do |config|
   config.vm.provider :libvirt
@@ -17,6 +18,9 @@ Vagrant.configure("2") do |config|
 
   config.vm.box = "elastic/ubuntu-16.04-x86_64"
   config.vm.provision 'shell', privileged: false do |sh|
+    sh.env = {
+        'SOCKS_PROXY': "#{socks_proxy}"
+    }
     sh.inline = <<-SHELL
       cd /vagrant/
       ./postinstall.sh

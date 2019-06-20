@@ -14,32 +14,22 @@ set -o xtrace
 
 # _install_docker() - Download and install docker-engine
 function _install_docker {
+    local chameleonsocks_filename=chameleonsocks.sh
+
     if command -v docker; then
         return
     fi
+    echo "Installing docker service..."
     curl -fsSL https://get.docker.com/ | sh
 
-    sudo mkdir -p /etc/systemd/system/docker.service.d/
-    mkdir -p "$HOME/.docker/"
-    config="{ \"proxies\": { \"default\": { "
-    if [[ ${HTTP_PROXY+x} = "x" ]]; then
-        echo "[Service]" | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf
-        echo "Environment=\"HTTP_PROXY=$HTTP_PROXY\"" | sudo tee --append /etc/systemd/system/docker.service.d/http-proxy.conf
-        config+="\"httpProxy\": \"$HTTP_PROXY\","
+    if [ -n "${SOCKS_PROXY+x}" ]; then
+        wget "https://raw.githubusercontent.com/crops/chameleonsocks/master/$chameleonsocks_filename"
+        chmod 755 "$chameleonsocks_filename"
+        socks_tmp="${SOCKS_PROXY#*//}"
+        sudo ./$chameleonsocks_filename --uninstall
+        sudo PROXY="${socks_tmp%:*}" PORT="${socks_tmp#*:}" ./$chameleonsocks_filename --install
+        rm $chameleonsocks_filename
     fi
-    if [[ ${HTTPS_PROXY+x} = "x" ]]; then
-        echo "[Service]" | sudo tee /etc/systemd/system/docker.service.d/https-proxy.conf
-        echo "Environment=\"HTTPS_PROXY=$HTTPS_PROXY\"" | sudo tee --append /etc/systemd/system/docker.service.d/https-proxy.conf
-        config+="\"httpsProxy\": \"$HTTPS_PROXY\","
-    fi
-    if [[ ${NO_PROXY+x} = "x" ]]; then
-        echo "[Service]" | sudo tee /etc/systemd/system/docker.service.d/no-proxy.conf
-        echo "Environment=\"NO_PROXY=$NO_PROXY\"" | sudo tee --append /etc/systemd/system/docker.service.d/no-proxy.conf
-        config+="\"noProxy\": \"$NO_PROXY\","
-    fi
-    echo "${config::-1} } } }" | tee "$HOME/.docker/config.json"
-    sudo systemctl daemon-reload
-    sudo systemctl restart docker
 }
 
 # install_docker_compose() - Installs docker compose python module
@@ -49,15 +39,18 @@ function install_docker_compose {
         curl -sL https://bootstrap.pypa.io/get-pip.py | sudo python
     fi
     if ! command -v docker-compose; then
+        echo "Installing docker-compose tool..."
         sudo -E pip install docker-compose==1.24.0
     fi
 }
 
 install_docker_compose
+sudo sysctl -w vm.max_map_count=262144
 sudo docker-compose up -d
-echo "Waiting for arthurd to start..."
-until sudo docker exec vagrant_arthurd_1 grep "Serving on http://0.0.0.0:8080" /var/log/arthur.log; do
+echo "Waiting for arthur daemon to start..."
+until sudo docker-compose exec arthurd  grep "Serving on http://0.0.0.0:8080" /var/log/arthur.log; do
     printf '.'
     sleep 2
 done
+echo "Add initial tasks"
 curl --noproxy "*" -H "Content-Type: application/json" --data @tasks.json http://10.5.1.4:8080/add
