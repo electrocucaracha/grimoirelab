@@ -10,6 +10,7 @@ networks:
 
 services:
   arthurd:
+    restart: on-failure:5
     image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
       context: ./kingarthur
@@ -33,14 +34,31 @@ services:
       arthurw --debug --database redis://redis/8
     networks:
       - worker
+    links:
+      - redis
   redis:
     image: redis:5.0.5
     networks:
       - worker
       - api
   elasticsearch:
-    image: elasticsearch:7.1.1
+    restart: on-failure:5
+    image: bitergia/elasticsearch:6.1.0
+    command: /elasticsearch/bin/elasticsearch -Enetwork.bind_host=0.0.0.0 -Ehttp.max_content_length=2000mb
     environment:
-      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms2g -Xmx2g
     networks:
       - api
+  kibiter:
+    restart: on-failure:5
+    image: bitergia/kibiter:community-v6.1.4-3
+    environment:
+      - NODE_OPTIONS=--max-old-space-size=1000
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    links:
+      - elasticsearch
+    networks:
+      api:
+        ipv4_address: 10.5.1.6
