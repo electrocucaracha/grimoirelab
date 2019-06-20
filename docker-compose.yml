@@ -19,11 +19,10 @@ services:
       - elasticsearch
     command:
       arthurd --no-daemon --debug --database redis://redis/8 --es-index http://elasticsearch:9200 --no-archive --log-path /var/log/ --host 0.0.0.0 --port 8080
-    ports:
-      - "8080:8080"
     networks:
-      api:
-        ipv4_address: 10.5.1.4
+      - api
+    volumes:
+      - ./logs/:/var/log/
   arthurw:
     image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
@@ -65,3 +64,16 @@ services:
     image: electrocucaracha/grimoirelab-bestiary
     build:
       context: ./bestiary
+  mordred:
+    image: electrocucaracha/grimoirelab-sirmordred:0.2.17
+    build:
+      context: ./sirmordred
+    volumes:
+      - ./conf/:/sirmordred/conf/
+      - ./logs/:/var/log/
+    networks:
+      - worker
+    links:
+      - elasticsearch
+      - arthurd
+      - redis

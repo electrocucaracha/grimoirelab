@@ -52,5 +52,4 @@ until sudo docker-compose exec arthurd  grep "Serving on http://0.0.0.0:8080" /v
     printf '.'
     sleep 2
 done
-echo "Add initial tasks"
-curl --noproxy "*" -H "Content-Type: application/json" --data @tasks.json http://10.5.1.4:8080/add
+echo "Ready!!!"
