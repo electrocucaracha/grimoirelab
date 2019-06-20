@@ -46,7 +46,7 @@ function install_docker_compose {
 
 install_docker_compose
 sudo sysctl -w vm.max_map_count=262144
-sudo docker-compose up -d
+sudo docker-compose up -d --scale arthurw=3
 echo "Waiting for arthur daemon to start..."
 until sudo docker-compose exec arthurd  grep "Serving on http://0.0.0.0:8080" /var/log/arthur.log; do
     printf '.'

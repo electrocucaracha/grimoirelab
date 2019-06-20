@@ -42,7 +42,6 @@ services:
       - worker
       - api
   elasticsearch:
-    restart: on-failure:5
     image: bitergia/elasticsearch:6.1.0
     command: /elasticsearch/bin/elasticsearch -Enetwork.bind_host=0.0.0.0 -Ehttp.max_content_length=2000mb
     environment:
@@ -62,3 +61,7 @@ services:
     networks:
       api:
         ipv4_address: 10.5.1.6
+  bestiary:
+    image: electrocucaracha/grimoirelab-bestiary
+    build:
+      context: ./bestiary
