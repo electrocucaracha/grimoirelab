@@ -1,4 +1,4 @@
 .vagrant/
 .tox/
-logs/*.log
+logs/*
 *.swp

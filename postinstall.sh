@@ -22,7 +22,7 @@ function _install_docker {
     echo "Installing docker service..."
     curl -fsSL https://get.docker.com/ | sh
 
-    if [ -n "${SOCKS_PROXY+x}" ]; then
+    if [ -n "${SOCKS_PROXY:-}" ]; then
         wget "https://raw.githubusercontent.com/crops/chameleonsocks/master/$chameleonsocks_filename"
         chmod 755 "$chameleonsocks_filename"
         socks_tmp="${SOCKS_PROXY#*//}"
@@ -47,9 +47,3 @@ function install_docker_compose {
 install_docker_compose
 sudo sysctl -w vm.max_map_count=262144
 sudo docker-compose up -d --scale arthurw=3
-echo "Waiting for arthur daemon to start..."
-until sudo docker-compose exec arthurd  grep "Serving on http://0.0.0.0:8080" /var/log/arthur.log; do
-    printf '.'
-    sleep 2
-done
-echo "Ready!!!"

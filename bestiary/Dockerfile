@@ -11,3 +11,6 @@ RUN python manage.py makemigrations
 RUN python manage.py migrate
 
 CMD ["gunicorn", "django_bestiary.wsgi", "--bind", "0.0.0.0:8000"]
+
+EXPOSE 8000
+HEALTHCHECK --interval=30s --timeout=10s CMD curl -f http://localhost:8000/

@@ -8,7 +8,7 @@ if ENV['no_proxy'] != nil or ENV['NO_PROXY']
   (1..31).each do |i|
     $no_proxy += ",#{$subnet}.#{i}"
   end
-  $no_proxy += ",10.0.2.15"
+  $no_proxy += ",10.0.2.15,redis,elasticsearch,kibiter,arthurd"
 end
 socks_proxy = ENV['socks_proxy'] || ENV['SOCKS_PROXY'] || ""
 

@@ -1,12 +1,4 @@
-version: '3.3'
-
-networks:
-  api:
-    ipam:
-     driver: default
-     config:
-       - subnet: 10.5.1.0/24
-  worker:
+version: '3.4'
 
 services:
   arthurd:
@@ -14,39 +6,32 @@ services:
     image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
       context: ./kingarthur
-    links:
+    depends_on:
       - redis
       - elasticsearch
     command:
       arthurd --no-daemon --debug --database redis://redis/8 --es-index http://elasticsearch:9200 --no-archive --log-path /var/log/ --host 0.0.0.0 --port 8080
-    networks:
-      - api
     volumes:
       - ./logs/:/var/log/
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/tasks"]
   arthurw:
     image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
       context: ./kingarthur
-    links:
+    depends_on:
       - redis
     command:
       arthurw --debug --database redis://redis/8
-    networks:
-      - worker
-    links:
-      - redis
   redis:
     image: redis:5.0.5
-    networks:
-      - worker
-      - api
+    healthcheck:
+      test: ["CMD", "redis-cli", "PING"]
   elasticsearch:
     image: bitergia/elasticsearch:6.1.0
     command: /elasticsearch/bin/elasticsearch -Enetwork.bind_host=0.0.0.0 -Ehttp.max_content_length=2000mb
     environment:
       - ES_JAVA_OPTS=-Xms2g -Xmx2g
-    networks:
-      - api
   kibiter:
     restart: on-failure:5
     image: bitergia/kibiter:community-v6.1.4-3
@@ -55,25 +40,56 @@ services:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     ports:
       - "5601:5601"
-    links:
+    depends_on:
       - elasticsearch
-    networks:
-      api:
-        ipv4_address: 10.5.1.6
   bestiary:
     image: electrocucaracha/grimoirelab-bestiary
     build:
       context: ./bestiary
   mordred:
+    restart: on-failure
     image: electrocucaracha/grimoirelab-sirmordred:0.2.17
     build:
       context: ./sirmordred
     volumes:
-      - ./conf/:/sirmordred/conf/
+      - ./conf/setup.cfg:/sirmordred/conf/setup.cfg:ro
+      - ./conf/projects_chaoss.json:/sirmordred/conf/projects.json:ro
+      - ./conf/aliases.json:/sirmordred/conf/aliases.json:ro
+      - ./conf/menu.yaml:/sirmordred/conf/menu.yaml:ro
       - ./logs/:/var/log/
-    networks:
-      - worker
     links:
+      - elasticsearch
+    depends_on:
       - elasticsearch
       - arthurd
       - redis
+      - sortinghat
+  sortinghat:
+    image: electrocucaracha/grimoirelab-sortinghat:0.7.6
+    build:
+      context: ./sortinghat
+    command:
+      sortinghat init grimoirelab
+    depends_on:
+      - mariadb
+    environment:
+      SORTINGHAT_DB_HOST: mariadb
+      SORTINGHAT_DB_USER: root
+      SORTINGHAT_DB_PASSWORD: "${SORTINGHAT_DB_PASSWORD}"
+      SORTINGHAT_DB_DATABASE: "${SORTINGHAT_DB_DATABASE}"
+      SORTINGHAT_DB_PORT: 3306
+  mariadb:
+    image: mariadb:10.1.38
+    restart: always
+    healthcheck:
+      test: ["CMD", "/usr/bin/mysql", "-p${SORTINGHAT_DB_PASSWORD}", "-e\"SHOW DATABASES;\""]
+      interval: 10s
+      timeout: 1s
+      start_period: 5m
+      retries: 5
+    environment:
+      MYSQL_DATABASE: "${SORTINGHAT_DB_DATABASE}"
+      MYSQL_ROOT_PASSWORD: "${SORTINGHAT_DB_PASSWORD}"
+    volumes:
+      - ./mariadb-init/sortinghat.sql:/docker-entrypoint-initdb.d/01_sortinghat_ddl.sql:ro
+      - ./logs/:/var/log/mysql/
