@@ -10,8 +10,9 @@ services:
       - redis
       - elasticsearch
     command:
-      arthurd --no-daemon --debug --database redis://redis/8 --es-index http://elasticsearch:9200 --no-archive --log-path /var/log/ --host 0.0.0.0 --port 8080
+      arthurd -c /home/setup.ini
     volumes:
+      - ./conf/setup_arthurd.ini:/home/setup.ini:ro
       - ./logs/:/var/log/
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/tasks"]
@@ -25,6 +26,8 @@ services:
       - redis
     command:
       arthurw --debug --database redis://redis/8
+    volumes:
+      - repos:/tmp/
   redis:
     image: redis:5.0.5
     healthcheck:
@@ -54,11 +57,12 @@ services:
     build:
       context: ./sirmordred
     volumes:
-      - ./conf/setup.cfg:/sirmordred/conf/setup.cfg:ro
+      - ./conf/setup_mordred.ini:/sirmordred/conf/setup.cfg:ro
       - ./conf/projects_openstack.json:/sirmordred/conf/projects.json:ro
       - ./conf/aliases.json:/sirmordred/conf/aliases.json:ro
       - ./conf/menu.yaml:/sirmordred/conf/menu.yaml:ro
       - ./logs/:/var/log/
+      - repos:/root/.perceval/repositories/
     links:
       - elasticsearch
     depends_on:
@@ -95,3 +99,6 @@ services:
     volumes:
       - ./mariadb-init/sortinghat.sql:/docker-entrypoint-initdb.d/01_sortinghat_ddl.sql:ro
       - ./logs/:/var/log/mysql/
+
+volumes:
+  repos:
