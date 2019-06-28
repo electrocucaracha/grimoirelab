@@ -21,8 +21,31 @@ function _install_docker {
     fi
     echo "Installing docker service..."
     curl -fsSL https://get.docker.com/ | sh
+    sudo mkdir -p /etc/systemd/system/docker.service.d/
+    mkdir -p "$HOME/.docker/"
+    sudo usermod -aG docker "$USER"
 
-    if [ -n "${SOCKS_PROXY:-}" ]; then
+    if [ -n "${HTTP_PROXY:-}" ] || [ -n "${HTTPS_PROXY:-}" ] || [ -n "${NO_PROXY:-}" ]; then
+        config="{ \"proxies\": { \"default\": { "
+        if [ -n "${HTTP_PROXY:-}" ]; then
+            echo "[Service]" | sudo tee /etc/systemd/system/docker.service.d/http-proxy.conf
+            echo "Environment=\"HTTP_PROXY=$HTTP_PROXY\"" | sudo tee --append /etc/systemd/system/docker.service.d/http-proxy.conf
+            config+="\"httpProxy\": \"$HTTP_PROXY\","
+        fi
+        if [ -n "${HTTPS_PROXY:-}" ]; then
+            echo "[Service]" | sudo tee /etc/systemd/system/docker.service.d/https-proxy.conf
+            echo "Environment=\"HTTPS_PROXY=$HTTPS_PROXY\"" | sudo tee --append /etc/systemd/system/docker.service.d/https-proxy.conf
+            config+="\"httpsProxy\": \"$HTTPS_PROXY\","
+        fi
+        if [ -n "${NO_PROXY:-}" ]; then
+            echo "[Service]" | sudo tee /etc/systemd/system/docker.service.d/no-proxy.conf
+            echo "Environment=\"NO_PROXY=$NO_PROXY\"" | sudo tee --append /etc/systemd/system/docker.service.d/no-proxy.conf
+            config+="\"noProxy\": \"$NO_PROXY\","
+        fi
+        echo "${config::-1} } } }" | tee "$HOME/.docker/config.json"
+        sudo systemctl daemon-reload
+        sudo systemctl restart docker
+    elif [ -n "${SOCKS_PROXY:-}" ]; then
         wget "https://raw.githubusercontent.com/crops/chameleonsocks/master/$chameleonsocks_filename"
         chmod 755 "$chameleonsocks_filename"
         socks_tmp="${SOCKS_PROXY#*//}"
@@ -46,4 +69,6 @@ function install_docker_compose {
 
 install_docker_compose
 sudo sysctl -w vm.max_map_count=262144
+sudo docker-compose down --remove-orphans
+sudo rm -rf logs/*
 sudo docker-compose up -d --scale arthurw=3
