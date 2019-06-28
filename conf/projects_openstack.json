@@ -1,0 +1,7 @@
+{
+    "OpenStack": {
+        "git": [
+            "https://opendev.org/openstack/kolla-ansible.git"
+        ]
+    }
+}

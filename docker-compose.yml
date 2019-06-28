@@ -15,6 +15,8 @@ services:
       - ./logs/:/var/log/
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/tasks"]
+    expose:
+      - "8080"
   arthurw:
     image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
@@ -53,7 +55,7 @@ services:
       context: ./sirmordred
     volumes:
       - ./conf/setup.cfg:/sirmordred/conf/setup.cfg:ro
-      - ./conf/projects_chaoss.json:/sirmordred/conf/projects.json:ro
+      - ./conf/projects_openstack.json:/sirmordred/conf/projects.json:ro
       - ./conf/aliases.json:/sirmordred/conf/aliases.json:ro
       - ./conf/menu.yaml:/sirmordred/conf/menu.yaml:ro
       - ./logs/:/var/log/
