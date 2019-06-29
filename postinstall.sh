@@ -10,7 +10,6 @@
 
 set -o nounset
 set -o pipefail
-set -o xtrace
 
 # _install_docker() - Download and install docker-engine
 function _install_docker {
@@ -55,10 +54,40 @@ function _install_docker {
     fi
 }
 
+# _install_jq() - Install a JSON processor
+function _install_jq {
+    if command -v jq; then
+        return
+    fi
+
+    echo "Installing JSON processor..."
+    # shellcheck disable=SC1091
+    source /etc/os-release || source /usr/lib/os-release
+    case ${ID,,} in
+        *suse)
+        INSTALLER_CMD="sudo -H -E zypper -q install -y --no-recommends"
+        sudo zypper -n ref
+        ;;
+
+        ubuntu|debian)
+        INSTALLER_CMD="sudo -H -E apt-get -y -q=3 install"
+        sudo apt-get update
+        ;;
+
+        rhel|centos|fedora)
+        PKG_MANAGER=$(command -v dnf || command -v yum)
+        INSTALLER_CMD="sudo -H -E ${PKG_MANAGER} -q -y install"
+        sudo "$PKG_MANAGER" updateinfo
+        ;;
+    esac
+    ${INSTALLER_CMD} jq
+}
+
 # install_docker_compose() - Installs docker compose python module
 function install_docker_compose {
     _install_docker
     if ! command -v pip; then
+        echo "Installing python package manager..."
         curl -sL https://bootstrap.pypa.io/get-pip.py | sudo python
     fi
     if ! command -v docker-compose; then
@@ -69,6 +98,26 @@ function install_docker_compose {
 
 install_docker_compose
 sudo sysctl -w vm.max_map_count=262144
+if [ ! -f conf/projects.json ]; then
+    _install_jq
+    projects="{\"$GRIMOIRELAB_ORG\": { \"git\": [ "
+    if [ -n "${GRIMOIRELAB_ORG+x}" ] ; then
+        repos_page=1
+        while true; do
+            repos_counter=0
+            for repo in $(curl -s "https://api.github.com/orgs/${GRIMOIRELAB_ORG}/repos?per_page=100&page=$repos_page" | jq ".[].html_url"); do
+                echo "Adding $repo to projects.json"
+                projects+="${repo},"
+                ((repos_counter+=1))
+            done
+            ((repos_page+=1))
+            [[ $repos_counter == 100 ]] || break
+        done
+    fi
+    echo "${projects::-1} ] } }" | jq . | tee "conf/projects.json"
+fi
+
+# Clean up
 sudo docker-compose down --remove-orphans
 sudo rm -rf logs/*
-sudo docker-compose up -d --scale arthurw=3
+sudo docker-compose up -d --scale arthurw=10

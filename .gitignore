@@ -2,3 +2,4 @@
 .tox/
 logs/*
 *.swp
+conf/projects.json

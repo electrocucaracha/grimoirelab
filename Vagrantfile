@@ -20,7 +20,8 @@ Vagrant.configure("2") do |config|
   config.vm.provision 'shell', privileged: false do |sh|
   config.vm.network :forwarded_port, guest: 5601, host: 5601
     sh.env = {
-        'SOCKS_PROXY': "#{socks_proxy}"
+        'SOCKS_PROXY': "#{socks_proxy}",
+        'GRIMOIRELAB_ORG': "openstack"
     }
     sh.inline = <<-SHELL
       cd /vagrant/

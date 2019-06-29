@@ -58,7 +58,7 @@ services:
       context: ./sirmordred
     volumes:
       - ./conf/setup_mordred.ini:/sirmordred/conf/setup.cfg:ro
-      - ./conf/projects_openstack.json:/sirmordred/conf/projects.json:ro
+      - ./conf/projects.json:/sirmordred/conf/projects.json:ro
       - ./conf/aliases.json:/sirmordred/conf/aliases.json:ro
       - ./conf/menu.yaml:/sirmordred/conf/menu.yaml:ro
       - ./logs/:/var/log/
