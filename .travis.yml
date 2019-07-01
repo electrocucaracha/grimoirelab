@@ -10,7 +10,7 @@ matrix:
 
     - language: shell
       script:
-        - bash -c 'shopt -s globstar; shellcheck -x **/*.sh'
+        - bash -c 'shopt -s globstar; shellcheck -x *.sh'
 
     - language: shell
       env:

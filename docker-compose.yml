@@ -63,6 +63,7 @@ services:
       - ./conf/menu.yaml:/sirmordred/conf/menu.yaml:ro
       - ./logs/:/var/log/
       - repos:/root/.perceval/repositories/
+      - ./sigils/src/panels/json:/sirmordred/conf/panels/json
     links:
       - elasticsearch
     depends_on:

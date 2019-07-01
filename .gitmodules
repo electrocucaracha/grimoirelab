@@ -1,3 +1,6 @@
 [submodule "bestiary/src"]
 	path = bestiary/src
 	url = https://github.com/chaoss/grimoirelab-bestiary
+[submodule "sigils/src"]
+	path = sigils/src
+	url = https://github.com/chaoss/grimoirelab-sigils
