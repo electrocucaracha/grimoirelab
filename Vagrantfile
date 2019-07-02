@@ -17,8 +17,8 @@ Vagrant.configure("2") do |config|
   config.vm.provider :virtualbox
 
   config.vm.box = "elastic/ubuntu-16.04-x86_64"
-  config.vm.provision 'shell', privileged: false do |sh|
   config.vm.network :forwarded_port, guest: 5601, host: 5601
+  config.vm.provision 'shell', privileged: false do |sh|
     sh.env = {
         'SOCKS_PROXY': "#{socks_proxy}",
         'GRIMOIRELAB_ORG': "openstack"
