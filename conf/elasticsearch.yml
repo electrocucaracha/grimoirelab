@@ -1,0 +1,7 @@
+cluster.name: elasticsearch
+http.bind_host: _eth0:ipv4_
+network.host: _eth0:ipv4_
+cluster.routing.allocation.disk.threshold_enabled: false
+discovery.type: single-node
+network.bind_host: 0.0.0.0
+http.max_content_length: 2000mb

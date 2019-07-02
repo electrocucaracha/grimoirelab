@@ -34,9 +34,8 @@ services:
       test: ["CMD", "redis-cli", "PING"]
   elasticsearch:
     image: bitergia/elasticsearch:6.1.0
-    command: /elasticsearch/bin/elasticsearch -Enetwork.bind_host=0.0.0.0 -Ehttp.max_content_length=2000mb
-    environment:
-      - ES_JAVA_OPTS=-Xms2g -Xmx2g
+    volumes:
+      - ./conf/elasticsearch.yml:/elasticsearch/config/elasticsearch.yml:ro
   kibiter:
     restart: on-failure:5
     image: bitergia/kibiter:community-v6.1.4-3
