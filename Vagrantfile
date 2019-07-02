@@ -51,5 +51,6 @@ Vagrant.configure("2") do |config|
     v.cpu_mode = 'host-passthrough'
     v.management_network_address = "192.168.124.0/27"
     v.management_network_name = "grimoirelab-mgmt-net"
+    v.random_hostname = true
   end
 end
