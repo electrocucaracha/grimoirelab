@@ -13,7 +13,7 @@ services:
       arthurd -c /home/setup.ini
     volumes:
       - ./conf/setup_arthurd.ini:/home/setup.ini:ro
-      - ./logs/:/var/log/
+      - ./logs/:/tmp/.arthur/logs
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/tasks"]
     expose:
