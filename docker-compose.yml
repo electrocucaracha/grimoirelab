@@ -60,7 +60,7 @@ services:
       - ./conf/projects.json:/sirmordred/conf/projects.json:ro
       - ./conf/aliases.json:/sirmordred/conf/aliases.json:ro
       - ./conf/menu.yaml:/sirmordred/conf/menu.yaml:ro
-      - ./logs/:/var/log/
+      - ./logs/:/tmp/log/
       - repos:/root/.perceval/repositories/
       - ./sigils/src/panels/json:/sirmordred/conf/panels/json
     links:
