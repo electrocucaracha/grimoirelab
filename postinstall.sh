@@ -120,4 +120,24 @@ fi
 # Clean up
 sudo docker-compose down --remove-orphans
 sudo rm -rf logs/*
-sudo docker-compose up -d --scale arthurw=10
+
+# Deployment
+if [ "${GRIMOIRELAB_DEPLOY_MODE:-pull}" == "build" ]; then
+    declare -A services
+    services=(
+["arthurd"]="electrocucaracha/grimoirelab-kingarthur"
+["arthurw"]="electrocucaracha/grimoirelab-kingarthur"
+["bestiary"]="electrocucaracha/grimoirelab-bestiary"
+["mordred"]="electrocucaracha/grimoirelab-sirmordred"
+["sortinghat"]="electrocucaracha/grimoirelab-sortinghat"
+    )
+    for service in "${!services[@]}"; do
+        image=${services[$service]}
+        if ! docker images | grep "$image" ; then
+            sudo docker-compose build --no-cache "$service"
+        fi
+    done
+else
+    sudo docker-compose pull
+fi
+sudo docker-compose up --scale arthurw=10 --force-recreate --renew-anon-volumes --detach
