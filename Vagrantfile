@@ -3,12 +3,7 @@
 
 if ENV['no_proxy'] != nil or ENV['NO_PROXY']
   $no_proxy = ENV['NO_PROXY'] || ENV['no_proxy'] || "127.0.0.1,localhost"
-  $subnet = "192.168.124"
-  # NOTE: This range is based on vagrant-libvirt network definition CIDR 192.168.124.0/27
-  (1..31).each do |i|
-    $no_proxy += ",#{$subnet}.#{i}"
-  end
-  $no_proxy += ",10.0.2.15,redis,elasticsearch,kibiter,arthurd"
+  $no_proxy += ",arthurd,redis,elasticsearch,kibiter"
 end
 socks_proxy = ENV['socks_proxy'] || ENV['SOCKS_PROXY'] || ""
 
