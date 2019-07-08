@@ -1,0 +1,12 @@
+FROM python:3.5.3
+MAINTAINER Victor Morales <electrocucaracha@gmail.com>
+
+RUN mkdir -p /sirmordred/conf
+RUN wget https://raw.githubusercontent.com/chaoss/grimoirelab-sirmordred/master/requirements.txt \
+  && pip install -r requirements.txt \
+  && rm requirements.txt
+RUN pip install --no-deps git+https://github.com/chaoss/grimoirelab-sirmordred
+
+WORKDIR /sirmordred/conf/
+
+CMD ["sirmordred", "-c", "setup.cfg"]

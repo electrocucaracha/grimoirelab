@@ -1,0 +1,7 @@
+FROM python:3.4
+MAINTAINER Victor Morales <electrocucaracha@gmail.com>
+
+RUN wget https://raw.githubusercontent.com/chaoss/grimoirelab-kingarthur/master/requirements.txt \
+  && pip install -r requirements.txt \
+  && rm requirements.txt
+RUN pip install --no-deps git+https://github.com/chaoss/grimoirelab-kingarthur

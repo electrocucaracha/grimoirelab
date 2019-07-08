@@ -12,13 +12,14 @@ matrix:
       script:
         - bash -c 'shopt -s globstar; shellcheck -x *.sh'
 
-    - language: shell
-      env:
-        - DOCKER_COMPOSE_VERSION=1.24.0
-      before_install:
-        - sudo rm /usr/local/bin/docker-compose
-        - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-        - chmod +x docker-compose
-        - sudo mv docker-compose /usr/local/bin
+    - language: python
+      install:
+        - pip install docker-compose==1.24.0
       script:
-        - docker-compose build --no-cache
+        - docker-compose --file docker-compose.yml --file docker-compose.latest.yml build --no-cache
+
+    - language: python
+      install:
+        - pip install docker-compose==1.24.0
+      script:
+        - docker-compose --file docker-compose.yml --file docker-compose.stable.yml build --no-cache
