@@ -22,6 +22,7 @@ function _install_docker {
     curl -fsSL https://get.docker.com/ | sh
     sudo mkdir -p /etc/systemd/system/docker.service.d/
     mkdir -p "$HOME/.docker/"
+    sudo mkdir -p /root/.docker/
     sudo usermod -aG docker "$USER"
 
     if [ -n "${HTTP_PROXY:-}" ] || [ -n "${HTTPS_PROXY:-}" ] || [ -n "${NO_PROXY:-}" ]; then
@@ -42,6 +43,7 @@ function _install_docker {
             config+="\"noProxy\": \"$NO_PROXY\","
         fi
         echo "${config::-1} } } }" | tee "$HOME/.docker/config.json"
+        sudo cp "$HOME/.docker/config.json" /root/.docker/config.json
         sudo systemctl daemon-reload
         sudo systemctl restart docker
     elif [ -n "${SOCKS_PROXY:-}" ]; then

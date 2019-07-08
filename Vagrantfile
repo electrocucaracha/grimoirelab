@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
     }
     sh.inline = <<-SHELL
       cd /vagrant/
-      ./postinstall.sh
+      ./docker-compose_deploy.sh | tee deploy.log
     SHELL
   end 
 

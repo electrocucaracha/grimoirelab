@@ -3,3 +3,4 @@
 logs/*
 *.swp
 conf/projects.json
+*.log

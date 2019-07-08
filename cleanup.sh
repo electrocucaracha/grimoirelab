@@ -11,6 +11,8 @@
 set -o nounset
 set -o pipefail
 
-# Clean up
+source _installers.sh
+
+install_docker_compose
 sudo docker-compose down --remove-orphans
 sudo rm -rf logs/*
