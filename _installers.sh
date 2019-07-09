@@ -77,7 +77,7 @@ function install_package {
         sudo "$PKG_MANAGER" updateinfo
         ;;
     esac
-    ${INSTALLER_CMD} $1
+    ${INSTALLER_CMD} "$1"
 }
 
 # _install_jq() - Install a JSON processor

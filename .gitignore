@@ -4,3 +4,5 @@ logs/*
 *.swp
 conf/projects.json
 *.log
+.terraform*
+terraform*

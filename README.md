@@ -27,14 +27,26 @@ Machine:
 ### Bare Metal
 
 It's possible to deploy GrimoireLab services on a Bare Metal machine.
-The [post-install script](postinstall.sh) installs dependencies
-required for the Docker-Compose execution. _This script can be
+The [All-in-One script](all-in-one.sh) clones the repository and
+executes the
+[Docker-Compose deployment script](docker-compose_deploy.sh) which
+installs the dependencies required for its execution. _This script can be
 executed multiple times._
 
 [![asciicast](https://asciinema.org/a/WwaPw46d6VO8WVd2eoSoMpD4Z.svg)](https://asciinema.org/a/WwaPw46d6VO8WVd2eoSoMpD4Z)
+
+### Terraform
+
+The Terraform configuration files provided for this project launch a
+single AWS EC2 instance. They require to install the `terraform`
+client previously, for more information visit the [official site][2].
+
+    $ terraform init
+    $ terraform apply -auto-approve
 
 ## License
 
 Apache-2.0
 
 [1]: https://chaoss.github.io/grimoirelab-tutorial/basics/components.html#components
+[2]: https://learn.hashicorp.com/terraform/getting-started/install#installing-terraform
