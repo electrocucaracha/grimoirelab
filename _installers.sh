@@ -56,13 +56,8 @@ function _install_docker {
     fi
 }
 
-# _install_jq() - Install a JSON processor
-function _install_jq {
-    if command -v jq; then
-        return
-    fi
-
-    echo "Installing JSON processor..."
+# install_package() - Installs a specific RPM or Deb package
+function install_package {
     # shellcheck disable=SC1091
     source /etc/os-release || source /usr/lib/os-release
     case ${ID,,} in
@@ -82,12 +77,31 @@ function _install_jq {
         sudo "$PKG_MANAGER" updateinfo
         ;;
     esac
-    ${INSTALLER_CMD} jq
+    ${INSTALLER_CMD} $1
+}
+
+# _install_jq() - Install a JSON processor
+function _install_jq {
+    if command -v jq; then
+        return
+    fi
+
+    echo "Installing JSON processor..."
+    install_package jq
 }
 
 # install_docker_compose() - Installs docker compose python module
 function install_docker_compose {
     _install_docker
+    if ! command -v python; then
+        # shellcheck disable=SC1091
+        source /etc/os-release || source /usr/lib/os-release
+        case ${ID,,} in
+            ubuntu|debian)
+            install_package python-minimal
+            ;;
+        esac
+    fi
     if ! command -v pip; then
         echo "Installing python package manager..."
         curl -sL https://bootstrap.pypa.io/get-pip.py | sudo python
