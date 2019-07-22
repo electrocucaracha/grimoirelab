@@ -24,7 +24,7 @@ services:
     build:
       context: ./bestiary
   mordred:
-    image: electrocucaracha/grimoirelab-sirmordred:0.2.17
+    image: electrocucaracha/grimoirelab-sirmordred:0.2.20
     build:
       context: ./sirmordred
   sortinghat:
