@@ -13,11 +13,6 @@ variable "private_key_path" {
   default     = "~/.ssh/id_rsa"
 }
 
-variable "key_name" {
-  description = "Desired name of AWS key pair"
-  default     = "terraform"
-}
-
 variable "aws_region" {
   description = "AWS region to launch servers."
   default     = "us-east-1"
