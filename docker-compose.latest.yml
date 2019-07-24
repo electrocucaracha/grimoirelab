@@ -21,17 +21,8 @@ services:
     build:
       context: ./kingarthur
       dockerfile: Dockerfile.latest
-  bestiary:
-    image: electrocucaracha/grimoirelab-bestiary
-    build:
-      context: ./bestiary
   mordred:
     image: electrocucaracha/grimoirelab-sirmordred:latest
     build:
       context: ./sirmordred
-      dockerfile: Dockerfile.latest
-  sortinghat:
-    image: electrocucaracha/grimoirelab-sortinghat:latest
-    build:
-      context: ./sortinghat
       dockerfile: Dockerfile.latest

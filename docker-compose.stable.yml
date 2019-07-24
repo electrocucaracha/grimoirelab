@@ -19,15 +19,7 @@ services:
     image: electrocucaracha/grimoirelab-kingarthur:0.1.15
     build:
       context: ./kingarthur
-  bestiary:
-    image: electrocucaracha/grimoirelab-bestiary
-    build:
-      context: ./bestiary
   mordred:
     image: electrocucaracha/grimoirelab-sirmordred:0.2.20
     build:
       context: ./sirmordred
-  sortinghat:
-    image: electrocucaracha/grimoirelab-sortinghat:0.7.6
-    build:
-      context: ./sortinghat
