@@ -24,4 +24,4 @@ if [ "${GRIMOIRELAB_DEPLOY_MODE:-pull}" == "build" ]; then
 else
     ${docker_compose_cmd} pull
 fi
-${docker_compose_cmd} up --scale arthurw=10 --force-recreate --renew-anon-volumes --detach
+${docker_compose_cmd} up --scale arthurw="${GRIMOIRELAB_NUM_ARTHUR_WORKERS:-10}" --force-recreate --renew-anon-volumes --detach
