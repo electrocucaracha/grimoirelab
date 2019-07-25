@@ -6,7 +6,7 @@ matrix:
       script:
         - tox
       env:
-        - TOXENV=bashate
+        - TOXENV=syntax
 
     - language: shell
       script:
