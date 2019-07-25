@@ -18,10 +18,26 @@ Vagrant.configure("2") do |config|
   config.vm.provision 'shell', privileged: false do |sh|
     sh.env = {
         'SOCKS_PROXY': "#{socks_proxy}",
-        'GRIMOIRELAB_ORG': "openstack"
+        'GRIMOIRELAB_DEBUG': "true",
+        'GRIMOIRELAB_NUM_ARTHUR_WORKERS': 3,
+        'GRIMOIRELAB_DEPLOY_MODE': "build",
+        'GRIMOIRELAB_DEPLOY_TAG': "latest"
     }
     sh.inline = <<-SHELL
       cd /vagrant/
+      cat <<EOL > /vagrant/conf/projects.json
+      {
+        "openstack": {
+          "git": [
+            "https://github.com/openstack/keystone",
+            "https://github.com/openstack/nova",
+            "https://github.com/openstack/neutron",
+            "https://github.com/openstack/cinder",
+            "https://github.com/openstack/glance"
+          ]
+        }
+      }
+EOL
       ./docker-compose_deploy.sh | tee deploy.log
     SHELL
   end 

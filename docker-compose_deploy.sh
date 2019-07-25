@@ -10,6 +10,9 @@
 
 set -o nounset
 set -o pipefail
+if [ "${GRIMOIRELAB_DEBUG:-false}" == "true" ]; then
+    set -o xtrace
+fi
 
 source _functions.sh
 source cleanup.sh
