@@ -1,3 +1,3 @@
-output "ip" {
-  value = "{aws_instance.grimoirelab.public_ip}"
+output "instance_ips" {
+  value = ["${aws_instance.grimoirelab.*.public_ip}"]
 }

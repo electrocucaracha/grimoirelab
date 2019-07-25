@@ -90,25 +90,25 @@ data "aws_ami" "ubuntu" {
 }
 
 data "template_file" "grimoirelab-script" {
+  count    = length(var.orgs)
   template = "${file("grimoirelab-script.tpl")}"
   vars     = {
-    org  = "${var.GRIMOIRELAB_ORG}"
-    user = "ubuntu"
-    home = "/home/ubuntu"
+    org            = "${element(var.orgs, count.index)}"
+    user           = "ubuntu"
+    home           = "/home/ubuntu"
+    arthur_workers = 25
   }
 }
 
 resource "aws_instance" "grimoirelab" {
-  instance_type          = "t2.large"
+  count                  = length(var.orgs)
+  instance_type          = "m4.4xlarge"
   ami                    = "${data.aws_ami.ubuntu.image_id}"
   key_name               = "${aws_key_pair.auth.id}"
   vpc_security_group_ids = ["${aws_security_group.default.id}"]
   subnet_id              = "${aws_subnet.default.id}"
-  user_data              = "${data.template_file.grimoirelab-script.rendered}"
+  user_data              = "${element(data.template_file.grimoirelab-script.*.rendered, count.index)}"
   availability_zone      = "${var.aws_region}a"
-  provisioner "local-exec" {
-    command = "echo \"ssh ubuntu@${aws_instance.grimoirelab.public_ip}\""
-  }
   root_block_device {
     volume_size           = 50
     delete_on_termination = true
@@ -116,12 +116,14 @@ resource "aws_instance" "grimoirelab" {
 }
 
 resource "aws_ebs_volume" "grimoirelab_volume" {
+  count             = length(var.orgs)
   availability_zone = "${var.aws_region}a"
   size              = 100
 }
 
 resource "aws_volume_attachment" "grimoirelab_att" {
+  count       = length(var.orgs)
   device_name = "/dev/sdh"
-  volume_id   = "${aws_ebs_volume.grimoirelab_volume.id}"
-  instance_id = "${aws_instance.grimoirelab.id}"
+  volume_id   = "${element(aws_ebs_volume.grimoirelab_volume.*.id, count.index)}"
+  instance_id = "${element(aws_instance.grimoirelab.*.id, count.index)}"
 }

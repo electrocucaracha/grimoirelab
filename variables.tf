@@ -18,6 +18,8 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "GRIMOIRELAB_ORG" {
-  default     = "openstack"
+variable "orgs" {
+  description = "A list of GitHub organizations that will be collected information"
+  type        = list(string)
+  default     = ["openstack", "opnfv", "onap"]
 }

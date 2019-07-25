@@ -18,4 +18,4 @@ sudo mkfs -t ext4 /dev/xvdh1
 mkdir -p /var/lib/docker/
 sudo mount /dev/xvdh1 /var/lib/docker/
 echo "/dev/xvdh1 /var/lib/docker/           ext4    errors=remount-ro,noatime,barrier=0 0       1" | sudo tee --append /etc/fstab
-curl -fsSL https://raw.githubusercontent.com/electrocucaracha/grimoirelab/master/all-in-one.sh | GRIMOIRELAB_ORG=${org} USER=${user} HOME=${home} bash
+curl -fsSL https://raw.githubusercontent.com/electrocucaracha/grimoirelab/master/all-in-one.sh | GRIMOIRELAB_ORG=${org} GRIMOIRELAB_NUM_ARTHUR_WORKERS=${arthur_workers} USER=${user} HOME=${home} bash
