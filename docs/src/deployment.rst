@@ -53,7 +53,7 @@ Machine:
 
 .. code-block:: bash
 
-    $ vagrant up
+    $ vagrant up docker_compose
 
 Containers in a Bare-metal machine
 ##################################
