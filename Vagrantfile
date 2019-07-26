@@ -3,7 +3,7 @@
 
 if ENV['no_proxy'] != nil or ENV['NO_PROXY']
   $no_proxy = ENV['NO_PROXY'] || ENV['no_proxy'] || "127.0.0.1,localhost"
-  # NOTE: This range is based on grimoirelab-mgmt-net network definition CIDR 192.168.124.4/30
+  # NOTE: This range is based on grimoirelab-mgmt-net network definition CIDR 192.168.124.5/30
   (4..7).each do |i|
     $no_proxy += ",192.168.124.#{i}"
   end
@@ -29,7 +29,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider 'libvirt' do |v, override|
     v.nested = true
     v.cpu_mode = 'host-passthrough'
-    v.management_network_address = "192.168.124.4/30"
+    v.management_network_address = "192.168.124.5/30"
     v.management_network_name = "grimoirelab-mgmt-net"
     v.random_hostname = true
   end
