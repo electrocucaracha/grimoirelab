@@ -15,10 +15,16 @@ if [ "${GRIMOIRELAB_DEBUG:-false}" == "true" ]; then
 fi
 
 source _functions.sh
+sudo sysctl -w vm.max_map_count=262144
+if ! command -v docker-compose; then
+    KRD_ACTIONS=("install_docker_compose")
+    KRD_ACTIONS_DECLARE=$(declare -p KRD_ACTIONS)
+    export KRD_ACTIONS_DECLARE
+    curl -fsSL https://raw.githubusercontent.com/electrocucaracha/krd/master/aio.sh | bash
+fi
 source cleanup.sh
 
 _generate_projects_file
-sudo sysctl -w vm.max_map_count=262144
 
 docker_compose_cmd="sudo docker-compose --file docker-compose.yml --file docker-compose.${GRIMOIRELAB_DEPLOY_TAG:-stable}.yml"
 # Deployment

@@ -41,6 +41,15 @@ Vagrant.configure("2") do |config|
       rsync__args: ["--verbose", "--archive", "--delete", "-z"]
     docker_compose.vm.provision 'shell', privileged: false do |sh|
       sh.env = {
+        'KRD_DEBUG': 'true',
+        'KRD_ACTIONS': 'install_docker_compose'
+      }
+      sh.inline = <<-SHELL
+        curl -fsSL https://raw.githubusercontent.com/electrocucaracha/krd/master/aio.sh | bash
+      SHELL
+    end
+    docker_compose.vm.provision 'shell', privileged: false do |sh|
+      sh.env = {
         'SOCKS_PROXY': "#{socks_proxy}",
         'GRIMOIRELAB_DEBUG': "true",
         'GRIMOIRELAB_NUM_ARTHUR_WORKERS': 3,
