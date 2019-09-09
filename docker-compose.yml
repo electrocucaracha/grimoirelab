@@ -34,6 +34,7 @@ services:
       arthurw --debug --database redis://redis/8
     volumes:
       - repos:/tmp/
+      - /root/.ssh/:/root/.ssh/
   redis:
     image: redis:5.0.5
     healthcheck:
@@ -56,7 +57,7 @@ services:
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "discovery.zen.ping.unicast.hosts=elasticsearch"
+      - discovery.zen.ping.unicast.hosts=elasticsearch
     ulimits:
       memlock:
         soft: -1
@@ -92,6 +93,33 @@ services:
       - elasticsearch
       - arthurd
       - redis
+      - sortinghat
+  sortinghat:
+    restart: on-failure
+    image: electrocucaracha/grimoirelab-sortinghat:0.7.6
+    command:
+      sortinghat init ${SORTINGHAT_DB_DATABASE}
+    depends_on:
+      - mariadb
+    environment:
+      SORTINGHAT_DB_HOST: mariadb
+      SORTINGHAT_DB_USER: root
+      SORTINGHAT_DB_PASSWORD: "${SORTINGHAT_DB_PASSWORD}"
+      SORTINGHAT_DB_PORT: 3306
+  mariadb:
+    image: mariadb:10.1.38
+    restart: always
+    healthcheck:
+      test: ["CMD", "/usr/bin/mysql", "-p${SORTINGHAT_DB_PASSWORD}", "-e'SHOW DATABASES;'"]
+      interval: 5s
+      timeout: 1s
+      start_period: 10s
+      retries: 10
+    environment:
+      MYSQL_ROOT_PASSWORD: "${SORTINGHAT_DB_PASSWORD}"
+    volumes:
+      - ./mariadb-init/sortinghat.sql:/docker-entrypoint-initdb.d/01_sortinghat_ddl.sql:ro
+      - ./logs/:/var/log/mysql/
 
 volumes:
   repos:

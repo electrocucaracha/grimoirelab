@@ -23,3 +23,7 @@ services:
     image: electrocucaracha/grimoirelab-sirmordred:0.2.20
     build:
       context: ./sirmordred
+  sortinghat:
+    image: electrocucaracha/grimoirelab-sortinghat:0.7.6
+    build:
+      context: ./sortinghat

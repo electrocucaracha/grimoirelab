@@ -26,3 +26,8 @@ services:
     build:
       context: ./sirmordred
       dockerfile: Dockerfile.latest
+  sortinghat:
+    image: electrocucaracha/grimoirelab-sortinghat:latest
+    build:
+      context: ./sortinghat
+      dockerfile: Dockerfile.latest
