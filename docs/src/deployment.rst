@@ -37,16 +37,18 @@ number of Arthur workers that is going to be created.
 Virtual Machines with vagrant
 #############################
 
-This project provides a *Vagrantfile* to automate the 
-provisioning process on a Virtual Machines. The *setup.sh* bash script
-provides the Linux instructions to install dependencies required for
-its usage. This script supports two Virtualization technologies
-(Libvirt and VirtualBox). The following instruction installs and
-configures the Libvirt provider.
+This project provides a *Vagrantfile* to automate the
+provisioning process on a Virtual Machines. It's highly recommended to
+use the  *setup.sh* script of the
+`bootstrap-vagrant project <https://github.com/electrocucaracha/bootstrap-vagrant>`_
+for installing Vagrant dependencies and plugins required for its
+project. The script supports two Virtualization providers (Libvirt and
+VirtualBox). The following instruction installs and
+configures Vagrant and Libvirt as Vagrant provider.
 
 .. code-block:: bash
 
-    $ ./setup.sh -p libvirt
+    $ curl -fsSL https://raw.githubusercontent.com/electrocucaracha/bootstrap-vagrant/master/setup.sh | PROVIDER=libvirt bash
 
 Once Vagrant is installed, it's possible to provision a Virtual
 Machine:
