@@ -1,0 +1,9 @@
+---
+image.tag: "6.1.0"
+image.repository: "bitergia/elasticsearch"
+master:
+  persistence:
+    storageClass: "rook-ceph-block"
+data:
+  persistence:
+    storageClass: "rook-ceph-block"

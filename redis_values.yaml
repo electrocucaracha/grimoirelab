@@ -1,0 +1,7 @@
+---
+master:
+  persistence:
+    storageClass: "rook-ceph-block"
+slave:
+  persistence:
+    storageClass: "rook-ceph-block"

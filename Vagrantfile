@@ -32,15 +32,6 @@ Vagrant.configure("2") do |config|
       rsync__args: ["--verbose", "--archive", "--delete", "-z"]
     docker_compose.vm.provision 'shell', privileged: false do |sh|
       sh.env = {
-        'KRD_DEBUG': 'true',
-        'KRD_ACTIONS': 'install_docker_compose'
-      }
-      sh.inline = <<-SHELL
-        curl -fsSL https://raw.githubusercontent.com/electrocucaracha/krd/master/aio.sh | bash
-      SHELL
-    end
-    docker_compose.vm.provision 'shell', privileged: false do |sh|
-      sh.env = {
         'SOCKS_PROXY': "#{socks_proxy}",
         'GRIMOIRELAB_DEBUG': "true",
         'GRIMOIRELAB_NUM_ARTHUR_WORKERS': 3,
@@ -77,10 +68,25 @@ EOL
   config.vm.define :kubernetes, autostart: false do |kubernetes|
     kubernetes.vm.provision 'shell', privileged: false do |sh|
       sh.env = {
-        'KRD_DEBUG': 'true'
+        'SOCKS_PROXY': "#{socks_proxy}",
+        'GRIMOIRELAB_DEBUG': "true"
       }
       sh.inline = <<-SHELL
-        curl -fsSL https://raw.githubusercontent.com/electrocucaracha/krd/master/aio.sh | bash
+        cd /vagrant/
+        cat <<EOL > /vagrant/conf/projects.json
+        {
+          "openstack": {
+            "git": [
+              "https://github.com/openstack/keystone",
+              "https://github.com/openstack/nova",
+              "https://github.com/openstack/neutron",
+              "https://github.com/openstack/cinder",
+              "https://github.com/openstack/glance"
+            ]
+          }
+        }
+EOL
+        ./kubernetes_deploy.sh | tee deploy.log
       SHELL
     end
     [:virtualbox, :libvirt].each do |provider|
