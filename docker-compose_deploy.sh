@@ -16,11 +16,15 @@ fi
 
 source _functions.sh
 sudo sysctl -w vm.max_map_count=262144
+pkgs=""
+if ! command -v docker; then
+    pkgs+="docker"
+fi
 if ! command -v docker-compose; then
-    KRD_ACTIONS=("install_docker_compose")
-    KRD_ACTIONS_DECLARE=$(declare -p KRD_ACTIONS)
-    export KRD_ACTIONS_DECLARE
-    curl -fsSL https://raw.githubusercontent.com/electrocucaracha/krd/master/aio.sh | bash
+    pkgs+=" docker-compose"
+fi
+if [ -n "$pkgs" ]; then
+    curl -fsSL http://bit.ly/pkgInstall | PKG=$pkgs bash
 fi
 source cleanup.sh
 
