@@ -24,7 +24,7 @@ if ! command -v docker-compose; then
     pkgs+=" docker-compose"
 fi
 if [ -n "$pkgs" ]; then
-    curl -fsSL http://bit.ly/pkgInstall | PKG=$pkgs bash
+    curl -fsSL http://bit.ly/install_pkg | PKG=$pkgs bash
 fi
 source cleanup.sh
 
