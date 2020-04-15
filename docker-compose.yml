@@ -13,7 +13,7 @@ version: '3.4'
 services:
   arthurd:
     restart: on-failure:5
-    image: electrocucaracha/grimoirelab-kingarthur:0.1.15
+    image: electrocucaracha/grimoirelab-kingarthur:0.1.18
     depends_on:
       - redis
       - elasticsearch
@@ -27,7 +27,7 @@ services:
     expose:
       - "8080"
   arthurw:
-    image: electrocucaracha/grimoirelab-kingarthur:0.1.15
+    image: electrocucaracha/grimoirelab-kingarthur:0.1.18
     depends_on:
       - redis
     command:

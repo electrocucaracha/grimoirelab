@@ -10,7 +10,7 @@ different components of this project:
 | Component  | Version | Status         |
 |------------|---------|----------------|
 | Bestiary   |         | Non-Integrated |
-| Kingarthur | 0.1.15  | Integrated     |
+| Kingarthur | 0.1.18  | Integrated     |
 | Sigils     |         | Non-Integrated |
 | Sirmordred | 0.2.20  | Integrated     |
 | Sortinghat | 0.7.6   | Non-Integrated |

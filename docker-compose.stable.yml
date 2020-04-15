@@ -12,11 +12,11 @@ version: '3.4'
 
 services:
   arthurd:
-    image: electrocucaracha/grimoirelab-kingarthur:0.1.15
+    image: electrocucaracha/grimoirelab-kingarthur:0.1.18
     build:
       context: ./kingarthur
   arthurw:
-    image: electrocucaracha/grimoirelab-kingarthur:0.1.15
+    image: electrocucaracha/grimoirelab-kingarthur:0.1.18
     build:
       context: ./kingarthur
   mordred:
