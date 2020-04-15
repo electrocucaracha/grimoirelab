@@ -12,7 +12,7 @@ different components of this project:
 | Bestiary   |         | Non-Integrated |
 | Kingarthur | 0.1.18  | Integrated     |
 | Sigils     |         | Non-Integrated |
-| Sirmordred | 0.2.20  | Integrated     |
+| Sirmordred | 0.2.25  | Integrated     |
 | Sortinghat | 0.7.6   | Non-Integrated |
 
 > Given that *sortinghat* isn't integrated yet it's not possible to

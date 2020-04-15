@@ -77,7 +77,7 @@ services:
       - elasticsearch
   mordred:
     restart: on-failure
-    image: electrocucaracha/grimoirelab-sirmordred:0.2.17
+    image: electrocucaracha/grimoirelab-sirmordred:0.2.25
     volumes:
       - ./conf/setup_mordred.ini:/sirmordred/conf/setup.cfg:ro
       - ./conf/projects.json:/sirmordred/conf/projects.json:ro

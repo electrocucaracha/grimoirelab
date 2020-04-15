@@ -20,7 +20,7 @@ services:
     build:
       context: ./kingarthur
   mordred:
-    image: electrocucaracha/grimoirelab-sirmordred:0.2.20
+    image: electrocucaracha/grimoirelab-sirmordred:0.2.25
     build:
       context: ./sirmordred
   sortinghat:
