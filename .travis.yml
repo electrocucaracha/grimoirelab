@@ -14,12 +14,12 @@ matrix:
 
     - language: python
       install:
-        - pip install docker-compose==1.24.0
+        - pip install docker-compose==1.25.4
       script:
         - docker-compose --file docker-compose.yml --file docker-compose.latest.yml build --no-cache
 
     - language: python
       install:
-        - pip install docker-compose==1.24.0
+        - pip install docker-compose==1.25.4
       script:
         - docker-compose --file docker-compose.yml --file docker-compose.stable.yml build --no-cache

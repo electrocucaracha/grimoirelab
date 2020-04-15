@@ -1,4 +1,4 @@
-FROM python:3.4
+FROM python:3.6
 MAINTAINER Victor Morales <electrocucaracha@gmail.com>
 
 RUN wget https://raw.githubusercontent.com/chaoss/grimoirelab-kingarthur/master/requirements.txt \

@@ -1,4 +1,4 @@
-FROM python:3.5.3
+FROM python:3.6
 MAINTAINER Victor Morales <electrocucaracha@gmail.com>
 
 RUN mkdir -p /sirmordred/conf
