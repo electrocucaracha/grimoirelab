@@ -96,7 +96,7 @@ services:
       - sortinghat
   sortinghat:
     restart: on-failure
-    image: electrocucaracha/grimoirelab-sortinghat:0.7.6
+    image: electrocucaracha/grimoirelab-sortinghat:0.7.7
     command:
       sortinghat init ${SORTINGHAT_DB_DATABASE}
     depends_on:

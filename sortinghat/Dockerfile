@@ -7,4 +7,4 @@ ENV SORTINGHAT_DB_PASSWORD "secret"
 ENV SORTINGHAT_DB_DATABASE "sortinghat"
 ENV SORTINGHAT_DB_PORT "3306"
 
-RUN pip install --no-cache-dir sortinghat==0.7.6
+RUN pip install --no-cache-dir sortinghat==0.7.7

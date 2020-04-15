@@ -24,6 +24,6 @@ services:
     build:
       context: ./sirmordred
   sortinghat:
-    image: electrocucaracha/grimoirelab-sortinghat:0.7.6
+    image: electrocucaracha/grimoirelab-sortinghat:0.7.7
     build:
       context: ./sortinghat

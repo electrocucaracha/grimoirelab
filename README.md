@@ -13,7 +13,7 @@ different components of this project:
 | Kingarthur | 0.1.18  | Integrated     |
 | Sigils     |         | Non-Integrated |
 | Sirmordred | 0.2.25  | Integrated     |
-| Sortinghat | 0.7.6   | Non-Integrated |
+| Sortinghat | 0.7.7   | Non-Integrated |
 
 > Given that *sortinghat* isn't integrated yet it's not possible to
 > use the panels provided by *sigils* so a custom panel has been
